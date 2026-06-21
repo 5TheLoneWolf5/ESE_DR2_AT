@@ -45,7 +45,7 @@ O contexto de Usuário se comunica com a API ACL de Pagamento, que então se com
 * Biblioteca : Biblioteca;
 * Plataforma : Plataforma;
 * Usuario : Usuario;
-* Pagamento_ACL : Pagamento_ACL;
+* Pagamento ACL : PagamentoACL;
 * Música : Musica;
 * Artista : Artista;
 * Favorito : Favorito;
