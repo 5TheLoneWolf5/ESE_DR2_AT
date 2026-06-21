@@ -18,6 +18,51 @@ Plataforma é conformista de acordo com o Catálogo, se ajustando e seguindo a c
 
 O contexto de Usuário se comunica com a API ACL de Pagamento, que então se comunica com o gateway externo para realizar os pagamentos e proteger os demais contextos do ambiente externo, não controlado, e que pode não seguir a linguagem ubíqua definida pela empresa.
 
+### Subdomínios:
+
+* Core:
+  * Músicas;
+  * Artistas;
+  * Favoritos;
+  * Playlists;
+  * Assinatura.
+
+* Support:
+  * Interface;
+  * Reprodução;
+  * Autenticação;;
+  * Conta.
+
+* Generic:
+  * Gateway;
+  * Transação.
+
+### Glossário (linguagem ubíqua):
+
+| Termo | Código |
+
+* Catálogo : Catalogo;
+* Biblioteca : Biblioteca;
+* Plataforma : Plataforma;
+* Usuario : Usuario;
+* Pagamento_ACL : Pagamento_ACL;
+* Música : Musica;
+* Artista : Artista;
+* Favorito : Favorito;
+* Playlist : Playlist;
+* Assinatura : Assinatura.
+* Reprodução : Reproducao;
+* Autenticação : Autenticacao;
+* Conta : Conta.
+* Gateway : Gateway;
+* Transação : Transacao.
+
 ### Mapa de Contexto Estratégico
 
-<img src="./dominio.jpg" />
+<img src="./dominio-estrategico.jpg" />
+<small>Utilizado para uma visão mais ampla e abstraída do negócio.</small>
+
+### Mapa de Contexto Tático
+
+<img src="./dominio-tatico.jpg" />
+<small>Utilizado para uma visão mais detalhada e aplicada do código do negócio.</small>
