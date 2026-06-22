@@ -60,9 +60,6 @@ O contexto de Usuário se comunica com a API ACL de Pagamento, que então se com
 ### Mapa de Contexto Estratégico
 
 <img src="./dominio-estrategico.jpg" />
-<small>Utilizado para uma visão mais ampla e abstraída do negócio.</small>
-
-### Mapa de Contexto Tático
-
-<img src="./dominio-tatico.jpg" />
-<small>Utilizado para uma visão mais detalhada e aplicada do código do negócio.</small>
+<small>O domínio estratégico é utilizado para uma visão mais ampla e abstraída do negócio.</small>
+<br/>
+<small>Já o mapa de contexto tático é utilizado para uma visão mais detalhada e aplicada do código do negócio.</small>
