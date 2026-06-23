@@ -1,6 +1,6 @@
 package com.musicapp.pagamento.repository;
 
-import com.musicapp.pagamento.domain.Cartao;
+import com.musicapp.pagamento.model.Cartao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 

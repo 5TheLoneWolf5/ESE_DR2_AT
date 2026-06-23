@@ -1,7 +1,7 @@
 package com.musicapp.pagamento.regras;
 
 import com.musicapp.pagamento.acl.UsuarioPaymentRequest;
-import com.musicapp.pagamento.domain.Cartao;
+import com.musicapp.pagamento.model.Cartao;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -1,6 +1,6 @@
 package com.musicapp.biblioteca.repository;
 
-import com.musicapp.biblioteca.domain.PlaylistItem;
+import com.musicapp.biblioteca.model.PlaylistItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 

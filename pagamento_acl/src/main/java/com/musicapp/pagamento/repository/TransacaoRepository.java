@@ -1,6 +1,6 @@
 package com.musicapp.pagamento.repository;
 
-import com.musicapp.pagamento.domain.Transacao;
+import com.musicapp.pagamento.model.Transacao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.time.LocalDateTime;
 import java.util.List;

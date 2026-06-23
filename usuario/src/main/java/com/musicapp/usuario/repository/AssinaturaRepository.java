@@ -1,6 +1,6 @@
 package com.musicapp.usuario.repository;
 
-import com.musicapp.usuario.domain.Assinatura;
+import com.musicapp.usuario.model.Assinatura;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 

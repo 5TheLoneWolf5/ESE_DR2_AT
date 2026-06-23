@@ -1,6 +1,6 @@
 package com.musicapp.pagamento.config;
 
-import com.musicapp.pagamento.domain.Cartao;
+import com.musicapp.pagamento.model.Cartao;
 import com.musicapp.pagamento.repository.CartaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

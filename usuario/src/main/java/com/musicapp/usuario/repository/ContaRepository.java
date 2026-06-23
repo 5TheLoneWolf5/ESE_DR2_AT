@@ -1,6 +1,6 @@
 package com.musicapp.usuario.repository;
 
-import com.musicapp.usuario.domain.Conta;
+import com.musicapp.usuario.model.Conta;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 

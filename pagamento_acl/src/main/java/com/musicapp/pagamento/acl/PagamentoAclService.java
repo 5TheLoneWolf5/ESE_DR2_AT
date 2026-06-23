@@ -1,7 +1,7 @@
 package com.musicapp.pagamento.acl;
 
-import com.musicapp.pagamento.domain.Cartao;
-import com.musicapp.pagamento.domain.Transacao;
+import com.musicapp.pagamento.model.Cartao;
+import com.musicapp.pagamento.model.Transacao;
 import com.musicapp.pagamento.gateway.GatewaySimulado;
 import com.musicapp.pagamento.repository.CartaoRepository;
 import com.musicapp.pagamento.repository.TransacaoRepository;

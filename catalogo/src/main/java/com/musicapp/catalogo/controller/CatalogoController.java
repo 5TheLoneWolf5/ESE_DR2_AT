@@ -1,9 +1,8 @@
 package com.musicapp.catalogo.controller;
 
-import com.musicapp.catalogo.domain.Artista;
-import com.musicapp.catalogo.domain.Musica;
-import com.musicapp.catalogo.repository.ArtistaRepository;
-import com.musicapp.catalogo.repository.MusicaRepository;
+import com.musicapp.catalogo.model.Artista;
+import com.musicapp.catalogo.model.Musica;
+import com.musicapp.catalogo.service.CatalogoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,52 +14,49 @@ import java.util.List;
 public class CatalogoController {
 
     @Autowired
-    private ArtistaRepository artistaRepository;
-
-    @Autowired
-    private MusicaRepository musicaRepository;
+    private CatalogoService catalogoService;
 
     @GetMapping("/artistas")
     public List<Artista> listarArtistas() {
-        return artistaRepository.findAll();
+        return catalogoService.listarArtistas();
     }
 
     @GetMapping("/artistas/{id}")
     public ResponseEntity<Artista> obterArtista(@PathVariable Long id) {
-        return artistaRepository.findById(id)
+        return catalogoService.obterArtista(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping("/artistas")
     public Artista criarArtista(@RequestBody Artista artista) {
-        return artistaRepository.save(artista);
+        return catalogoService.criarArtista(artista);
     }
 
     @GetMapping("/musicas")
     public List<Musica> listarMusicas() {
-        return musicaRepository.findAll();
+        return catalogoService.listarMusicas();
     }
 
     @GetMapping("/musicas/{id}")
     public ResponseEntity<Musica> obterMusica(@PathVariable Long id) {
-        return musicaRepository.findById(id)
+        return catalogoService.obterMusica(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/musicas/artista/{artistaId}")
     public List<Musica> listarMusicasPorArtista(@PathVariable Long artistaId) {
-        return musicaRepository.findByArtistaId(artistaId);
+        return catalogoService.listarMusicasPorArtista(artistaId);
     }
 
     @PostMapping("/musicas")
     public ResponseEntity<?> criarMusica(@RequestBody Musica musica) {
-        if (musica.getArtista() != null && musica.getArtista().getId() != null) {
-            if (!artistaRepository.existsById(musica.getArtista().getId())) {
-                return ResponseEntity.badRequest().body("Artista associado não existe.");
-            }
+        try {
+            Musica novaMusica = catalogoService.criarMusica(musica);
+            return ResponseEntity.ok(novaMusica);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
-        return ResponseEntity.ok(musicaRepository.save(musica));
     }
 }

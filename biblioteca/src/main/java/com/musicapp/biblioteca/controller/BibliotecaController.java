@@ -1,45 +1,27 @@
 package com.musicapp.biblioteca.controller;
 
-import com.musicapp.biblioteca.domain.Favorito;
-import com.musicapp.biblioteca.domain.Playlist;
-import com.musicapp.biblioteca.domain.PlaylistItem;
-import com.musicapp.biblioteca.repository.FavoritoRepository;
-import com.musicapp.biblioteca.repository.PlaylistRepository;
-import com.musicapp.biblioteca.repository.PlaylistItemRepository;
+import com.musicapp.biblioteca.model.Favorito;
+import com.musicapp.biblioteca.model.Playlist;
+import com.musicapp.biblioteca.model.PlaylistItem;
+import com.musicapp.biblioteca.service.BibliotecaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/biblioteca")
 public class BibliotecaController {
 
     @Autowired
-    private FavoritoRepository favoritoRepository;
-
-    @Autowired
-    private PlaylistRepository playlistRepository;
-
-    @Autowired
-    private PlaylistItemRepository playlistItemRepository;
-
-    @Autowired
-    private RestTemplate restTemplate;
+    private BibliotecaService bibliotecaService;
 
     @PostMapping("/usuarios/{usuarioId}/inicializar")
     public ResponseEntity<String> inicializarBiblioteca(@PathVariable Long usuarioId) {
-        System.out.println("Parceria (Partnership) ativada: Inicializando biblioteca do usuario ID: " + usuarioId);
-        
-        Playlist playlistPadrao = new Playlist("Minhas Curtidas", usuarioId);
-        playlistRepository.save(playlistPadrao);
-
+        bibliotecaService.inicializarBiblioteca(usuarioId);
         return ResponseEntity.ok("Biblioteca inicializada com sucesso");
     }
 
@@ -53,34 +35,26 @@ public class BibliotecaController {
         }
 
         try {
-            ResponseEntity<Map> response = restTemplate.getForEntity(
-                    "http://localhost:8083/api/catalogo/musicas/" + musicaId,
-                    Map.class
-            );
-            if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
-                return ResponseEntity.badRequest().body("Música não existe no catálogo.");
+            Optional<Favorito> favorito = bibliotecaService.adicionarFavorito(usuarioId, musicaId);
+            if (favorito.isEmpty()) {
+                return ResponseEntity.ok("Música já está nos favoritos.");
             }
-        } catch (Exception e) {
-            System.err.println("Erro ao validar música no catálogo: " + e.getMessage());
-            return ResponseEntity.status(503).body("Serviço de catálogo indisponível. Tente novamente mais tarde.");
+            return ResponseEntity.ok(favorito.get());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(503).body(e.getMessage());
         }
-
-        if (favoritoRepository.findByUsuarioIdAndMusicaId(usuarioId, musicaId).isPresent()) {
-            return ResponseEntity.ok("Música já está nos favoritos.");
-        }
-
-        Favorito favorito = favoritoRepository.save(new Favorito(usuarioId, musicaId));
-        return ResponseEntity.ok(favorito);
     }
 
     @GetMapping("/favoritos/usuario/{usuarioId}")
     public List<Favorito> obterFavoritos(@PathVariable Long usuarioId) {
-        return favoritoRepository.findByUsuarioId(usuarioId);
+        return bibliotecaService.obterFavoritos(usuarioId);
     }
 
     @PostMapping("/playlists")
     public Playlist criarPlaylist(@RequestBody Playlist playlist) {
-        return playlistRepository.save(playlist);
+        return bibliotecaService.criarPlaylist(playlist);
     }
 
     @PostMapping("/playlists/{playlistId}/adicionar")
@@ -90,45 +64,27 @@ public class BibliotecaController {
             return ResponseEntity.badRequest().body("Música ID obrigatória.");
         }
 
-        Optional<Playlist> playlistOpt = playlistRepository.findById(playlistId);
-        if (playlistOpt.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        Playlist playlist = playlistOpt.get();
-
         try {
-            ResponseEntity<Map> response = restTemplate.getForEntity(
-                    "http://localhost:8083/api/catalogo/musicas/" + musicaId,
-                    Map.class
-            );
-            if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
-                return ResponseEntity.badRequest().body("Música não existe no catálogo.");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(503).body("Serviço de catálogo indisponível para validação.");
+            PlaylistItem item = bibliotecaService.adicionarMusicaNaPlaylist(playlistId, musicaId);
+            return ResponseEntity.ok(item);
+        } catch (java.util.NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(503).body(e.getMessage());
         }
-
-        PlaylistItem item = playlistItemRepository.save(new PlaylistItem(playlist, musicaId));
-        return ResponseEntity.ok(item);
     }
 
     @GetMapping("/playlists/usuario/{usuarioId}")
     public List<Playlist> obterPlaylistsDoUsuario(@PathVariable Long usuarioId) {
-        return playlistRepository.findByUsuarioId(usuarioId);
+        return bibliotecaService.obterPlaylistsDoUsuario(usuarioId);
     }
 
     @GetMapping("/playlists/{playlistId}")
     public ResponseEntity<?> obterDetalhesPlaylist(@PathVariable Long playlistId) {
-        return playlistRepository.findById(playlistId)
-                .map(playlist -> {
-                    List<PlaylistItem> itens = playlistItemRepository.findByPlaylistId(playlistId);
-                    List<Long> musicasIds = itens.stream().map(PlaylistItem::getMusicaId).collect(Collectors.toList());
-                    
-                    Map<String, Object> result = new HashMap<>();
-                    result.put("playlist", playlist);
-                    result.put("musicasIds", musicasIds);
-                    return ResponseEntity.ok(result);
-                })
+        return bibliotecaService.obterDetalhesPlaylist(playlistId)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 }

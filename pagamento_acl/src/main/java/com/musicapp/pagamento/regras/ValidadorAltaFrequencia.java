@@ -1,8 +1,8 @@
 package com.musicapp.pagamento.regras;
 
 import com.musicapp.pagamento.acl.UsuarioPaymentRequest;
-import com.musicapp.pagamento.domain.Cartao;
-import com.musicapp.pagamento.domain.Transacao;
+import com.musicapp.pagamento.model.Cartao;
+import com.musicapp.pagamento.model.Transacao;
 import com.musicapp.pagamento.repository.TransacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

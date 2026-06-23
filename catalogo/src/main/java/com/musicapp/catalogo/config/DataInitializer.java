@@ -1,7 +1,7 @@
 package com.musicapp.catalogo.config;
 
-import com.musicapp.catalogo.domain.Artista;
-import com.musicapp.catalogo.domain.Musica;
+import com.musicapp.catalogo.model.Artista;
+import com.musicapp.catalogo.model.Musica;
 import com.musicapp.catalogo.repository.ArtistaRepository;
 import com.musicapp.catalogo.repository.MusicaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
